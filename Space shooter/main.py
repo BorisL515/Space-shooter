@@ -2,28 +2,49 @@ import pygame
 import os
 
 pygame.init()
-
-screen = pygame.display.set_mode((800,600))
-Title = pygame.display.set_caption(("Quantum Nova"))
-
-icon_path = os.path.join("Models", "Icon.png")
-icon = pygame.image.load(icon_path)
-pygame.display.set_icon(icon)
-
-Player_path = os.path.join("Models", "Player.png")
-Background_path = os.path.join("Models", "Background.png")
-Background = pygame.image.load(Background_path)
-Playerimg = pygame.image.load(Player_path)
 running = True
 
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption("Quantum Nova")
+
+# The path to images.
+icon_path = os.path.join("Models", "Icon.png")
+player_path = os.path.join("Models", "Player.png")
+background_path = os.path.join("Models", "Background.png")
+
+# The icon for the app
+icon = pygame.image.load(icon_path).convert()
+pygame.display.set_icon(icon)
+
+player_img_x = 370
+player_img_y = 480
+change_x = 0
+
+# This stores the images into the data
+background = pygame.image.load(background_path).convert()
+player_img = pygame.image.load(player_path)
+
+# This displays the images on the X and Y coordinates I want them to be.
 def player():
-    screen.blit(Playerimg,(370,480))
+    screen.blit(player_img, (player_img_x, player_img_y))
 
 while running:
-    screen.blit(Background, (0,0))
+    screen.blit(background, (0, 0))
     for event in pygame.event.get():
-        if event.type==pygame.QUIT:
+        if event.type == pygame.QUIT:
             running = False
-    player()        
-    pygame.display.update()
 
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_d]:
+        change_x = 1
+    elif keys[pygame.K_a]:
+        change_x = -1
+    else:
+        change_x = 0
+
+    player_img_x += change_x
+
+    player()
+    pygame.display.flip()
+
+pygame.quit()
