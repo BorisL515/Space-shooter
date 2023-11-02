@@ -11,6 +11,7 @@ pygame.display.set_caption("Quantum Nova")
 icon_path = os.path.join("Models", "Icon.png")
 player_path = os.path.join("Models", "Player.png")
 background_path = os.path.join("Models", "Background.png")
+enemy_path = os.path.join("Models", "Enemy.png")
 
 # The icon for the app
 icon = pygame.image.load(icon_path).convert()
@@ -23,7 +24,7 @@ change_x = 0
 # This stores the images into the data
 background = pygame.image.load(background_path).convert()
 player_img = pygame.image.load(player_path)
-
+enemy_img = pygame.image.load(enemy_path)
 # This displays the images on the X and Y coordinates I want them to be.
 def player():
     screen.blit(player_img, (player_img_x, player_img_y))
@@ -44,7 +45,15 @@ while running:
 
     player_img_x += change_x
 
+    if player_img_x<= -3:
+        player_img_x = -3
+    elif player_img_x>= 705:
+        player_img_x = 705
+
+    screen.blit(enemy_img, (400,500))
+    
     player()
     pygame.display.flip()
+
 
 pygame.quit()
