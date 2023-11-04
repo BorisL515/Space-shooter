@@ -1,34 +1,42 @@
 import pygame
 import os
+import random
 
+# Initialize Pygame
 pygame.init()
-running = True
 
+# Create the game window
 screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Quantum Nova")
 
-# The path to images.
-icon_path = os.path.join("Models", "Icon.png")
-player_path = os.path.join("Models", "Player.png")
-background_path = os.path.join("Models", "Background.png")
-enemy_path = os.path.join("Models", "Enemy.png")
-
-# The icon for the app
-icon = pygame.image.load(icon_path).convert()
+# Load images
+icon = pygame.image.load(os.path.join("Models", "Icon.png")).convert()
 pygame.display.set_icon(icon)
 
-player_img_x = 370
-player_img_y = 480
-change_x = 0
+background = pygame.image.load(os.path.join("Models", "Background.png")).convert()
+player_img = pygame.image.load(os.path.join("Models", "Player.png"))
+enemy_img = pygame.image.load(os.path.join("Models", "Enemy.png"))
 
-# This stores the images into the data
-background = pygame.image.load(background_path).convert()
-player_img = pygame.image.load(player_path)
-enemy_img = pygame.image.load(enemy_path)
-# This displays the images on the X and Y coordinates I want them to be.
-def player():
-    screen.blit(player_img, (player_img_x, player_img_y))
+# Game variables
+player_x = 370
+player_y = 480
+player_speed_x = 0.8
 
+enemy_x = random.randint(40, 736)
+enemy_y = random.randint(30, 150)
+enemy_speed_x = 0.3
+enemy_speed_y = 30
+
+running = True
+
+# Define functions
+def draw_player():
+    screen.blit(player_img, (player_x, player_y))
+
+def draw_enemy():
+    screen.blit(enemy_img, (enemy_x, enemy_y))
+
+# Main game loop
 while running:
     screen.blit(background, (0, 0))
     for event in pygame.event.get():
@@ -37,23 +45,28 @@ while running:
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_d]:
-        change_x = 1
+        player_x += player_speed_x
     elif keys[pygame.K_a]:
-        change_x = -1
-    else:
-        change_x = 0
+        player_x -= player_speed_x
 
-    player_img_x += change_x
-
-    if player_img_x<= -3:
-        player_img_x = -3
-    elif player_img_x>= 705:
-        player_img_x = 705
-
-    screen.blit(enemy_img, (400,500))
+    # Ensure player_x stays within defined ranges
+    player_x = max(0, min(player_x, 705))
     
-    player()
+    # Adjust enemy movement based on their proximity to specific coordinates
+    if enemy_x <= 3:
+        enemy_speed_x = 0.3
+        enemy_y += enemy_speed_y
+    if enemy_x >= 710:
+        enemy_speed_x = -0.3
+        enemy_y += enemy_speed_y
+
+    # Update enemy position
+    enemy_x += enemy_speed_x
+
+    # Render player and enemy
+    draw_player()
+    draw_enemy()
     pygame.display.flip()
 
-
+# Quit Pygame
 pygame.quit()
